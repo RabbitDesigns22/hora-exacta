@@ -66,14 +66,56 @@ def lugar():
         return ""
 
 
+def por_ip():
+    """Ciudad aproximada según la IP pública (ipwho.is, gratis y sin clave).
+    Se guarda 6 horas en ~/.claude/hora-exacta-ip.json para no consultar en cada mensaje.
+    Sin internet devuelve lo último guardado, o nada."""
+    import json, time, urllib.request
+    from pathlib import Path
+    cache = Path.home() / ".claude" / "hora-exacta-ip.json"
+    viejo = {}
+    try:
+        viejo = json.loads(cache.read_text(encoding="utf-8"))
+        if time.time() - viejo.get("t", 0) < 6 * 3600:
+            return viejo.get("lugar", "")
+    except (OSError, ValueError):
+        pass
+    try:
+        with urllib.request.urlopen("https://ipwho.is/?fields=success,city,region,country,timezone",
+                                    timeout=2) as r:
+            d = json.load(r)
+        if not d.get("success"):
+            raise ValueError
+        tz = (d.get("timezone") or {}).get("id", "")
+        lugar = ", ".join(x for x in (d.get("city"), d.get("region"), d.get("country")) if x)
+        lugar += f" (zona {tz})" if tz else ""
+        cache.write_text(json.dumps({"t": time.time(), "lugar": lugar}), encoding="utf-8")
+        return lugar
+    except Exception:
+        return viejo.get("lugar", "")
+
+
+def reloj_local():
+    """Desfase del reloj de esta computadora, sin internet (sigue a Windows/macOS si viajas)."""
+    off = datetime.now().astimezone().utcoffset()
+    h = int(off.total_seconds() // 3600)
+    m = int(abs(off.total_seconds()) % 3600 // 60)
+    return f"UTC{h:+d}" + (f":{m:02d}" if m else "")
+
+
 def main(argv):
     sys.stdout.reconfigure(encoding="utf-8")
     utc = datetime.now(timezone.utc)
     partes = [(n, hora_en(utc, z, f)) for n, z, f in ZONAS]
     extra = [semana(partes[0][1])]
+    ip = "" if "--sin-ip" in argv else por_ip()
     sitio = lugar()
+    donde = f"Reloj de esta computadora: {reloj_local()}."
+    if ip:
+        donde = f"Ubicación según la IP (aprox.): {ip}. " + donde
     if sitio:
-        extra.insert(0, f"Dónde: {sitio}")
+        donde += f" Nota: {sitio}"
+    extra.insert(0, "Dónde: " + donde)
     if "--corto" in argv:
         print("FECHA Y HORA REALES AHORA (no las adivines ni uses otra): "
               + " · ".join(f"{n} {texto(d)}" for n, d in partes)

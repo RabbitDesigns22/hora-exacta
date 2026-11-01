@@ -12,9 +12,15 @@ npx skills add RabbitDesigns22/hora-exacta -g -y
 
 Después agrega el hook de `skills/hora-exacta/SKILL.md` para que cada mensaje llegue con la fecha y la hora.
 
-## Dónde estás (opcional)
+## Dónde estás (automático)
 
-Escribe en `~/.claude/hora-exacta-lugar.txt` dónde vives o trabajas, en una línea. Cada mensaje lo trae junto a la hora, para que Claude no se pierda ni en el tiempo ni en el lugar. También sale siempre la semana en curso (de lunes a domingo).
+Cada mensaje trae también dónde estás, para que Claude no se pierda ni en el tiempo ni en el lugar:
+
+- **Ciudad aproximada según tu IP** (servicio gratis [ipwho.is](https://ipwho.is), sin clave). Se consulta como mucho cada 6 horas y se guarda en `~/.claude/hora-exacta-ip.json`. Sin internet usa lo último guardado. Con VPN dirá la ciudad de la VPN. Para no consultarla, usa `--sin-ip`.
+- **El huso horario de tu computadora**, sin internet. Si viajas y tu computadora cambia de hora, lo sigue.
+- **Una nota tuya** (opcional) en `~/.claude/hora-exacta-lugar.txt`, en una línea.
+
+También sale siempre la semana en curso (de lunes a domingo).
 
 ## Probar
 
