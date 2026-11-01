@@ -45,18 +45,45 @@ def texto(d):
     return f"{DIAS[d.weekday()]} {d.day} de {MESES[d.month - 1]} de {d.year}, {d:%H:%M}"
 
 
+def fecha(d):
+    return f"{DIAS[d.weekday()]} {d.day} de {MESES[d.month - 1]}"
+
+
+def semana(d):
+    """Semana en curso (lunes a domingo) según la primera zona de la lista."""
+    lunes = d - timedelta(days=d.weekday())
+    return (f"Semana en curso: del {fecha(lunes)} al {fecha(lunes + timedelta(days=6))};"
+            f" la próxima empieza el {fecha(lunes + timedelta(days=7))}.")
+
+
+def lugar():
+    """Texto libre de ~/.claude/hora-exacta-lugar.txt (dónde está la persona). Opcional."""
+    from pathlib import Path
+    try:
+        return " ".join((Path.home() / ".claude" / "hora-exacta-lugar.txt")
+                        .read_text(encoding="utf-8").split())
+    except OSError:
+        return ""
+
+
 def main(argv):
     sys.stdout.reconfigure(encoding="utf-8")
     utc = datetime.now(timezone.utc)
     partes = [(n, hora_en(utc, z, f)) for n, z, f in ZONAS]
+    extra = [semana(partes[0][1])]
+    sitio = lugar()
+    if sitio:
+        extra.insert(0, f"Dónde: {sitio}")
     if "--corto" in argv:
         print("FECHA Y HORA REALES AHORA (no las adivines ni uses otra): "
               + " · ".join(f"{n} {texto(d)}" for n, d in partes)
-              + f" · UTC {utc:%Y-%m-%d %H:%M}.")
+              + f" · UTC {utc:%Y-%m-%d %H:%M}. " + " ".join(extra))
     else:
         for n, d in partes:
             print(f"{n:<11} {texto(d)}")
         print(f"{'UTC':<11} {utc:%Y-%m-%d %H:%M}")
+        for e in extra:
+            print(e)
 
 
 if __name__ == "__main__":

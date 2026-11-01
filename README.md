@@ -12,6 +12,10 @@ npx skills add RabbitDesigns22/hora-exacta -g -y
 
 Después agrega el hook de `skills/hora-exacta/SKILL.md` para que cada mensaje llegue con la fecha y la hora.
 
+## Dónde estás (opcional)
+
+Escribe en `~/.claude/hora-exacta-lugar.txt` dónde vives o trabajas, en una línea. Cada mensaje lo trae junto a la hora, para que Claude no se pierda ni en el tiempo ni en el lugar. También sale siempre la semana en curso (de lunes a domingo).
+
 ## Probar
 
 ```bash

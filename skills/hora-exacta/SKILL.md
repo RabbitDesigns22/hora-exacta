@@ -30,7 +30,7 @@ Agrega este hook en `~/.claude/settings.json`, dentro de `hooks.UserPromptSubmit
 { "type": "command", "command": "python \"~/.claude/skills/hora-exacta/scripts/hora.py\" --corto", "timeout": 5 }
 ```
 
-Cambia la ruta por la ruta completa de tu equipo. `--corto` imprime una sola línea.
+Cambia la ruta por la ruta completa de tu equipo. `--corto` imprime una sola línea con la hora, la semana en curso y, si existe `~/.claude/hora-exacta-lugar.txt`, dónde estás.
 
 ## Detalles
 
