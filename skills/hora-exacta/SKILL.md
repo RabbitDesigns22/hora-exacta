@@ -1,7 +1,7 @@
 ---
 name: hora-exacta
 description: >-
-  Use whenever the date, time, day of the week or year matters: "¿qué hora es?", "¿qué día es hoy?", "hoy", "mañana", "esta semana", "el lunes", schedules, deadlines, publishing times, "hace cuánto", time zones (CDMX, Lima, Costa Rica, Caracas, Florida), or before writing any date in a file, report or message. Never guess the date from memory or from the conversation: run the script and use what it prints. Also install the hook so every message already carries the real date and time.
+  Use whenever the date, time, day of the week or year matters: "¿qué hora es?", "¿qué día es hoy?", "hoy", "mañana", "esta semana", "el lunes", schedules, deadlines, publishing times, "hace cuánto", time zones (CDMX, Lima, Costa Rica, Caracas, Florida), or before writing any date in a file, report or message. Never guess the date from memory or from the conversation: run the script and use what it prints. Also offer the hook (show the block, add it after the user's yes) so every message already carries the real date and time.
 license: MIT
 ---
 
@@ -24,7 +24,7 @@ Esta skill da la fecha y la hora REALES de la computadora, en las zonas donde tr
 
 ## Que todos los chats la sepan siempre (hook)
 
-Agrega este hook en `~/.claude/settings.json`, dentro de `hooks.UserPromptSubmit`. Así cada mensaje llega con la fecha y la hora reales, en todos los chats y sin pedirlo:
+Muéstrale al usuario este bloque y agrégalo en `~/.claude/settings.json`, dentro de `hooks.UserPromptSubmit`, solo después de su sí. Así cada mensaje llega con la fecha y la hora reales, en todos los chats y sin pedirlo:
 
 ```json
 { "type": "command", "command": "python \"~/.claude/skills/hora-exacta/scripts/hora.py\" --corto", "timeout": 5 }
