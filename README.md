@@ -33,7 +33,7 @@ Necesitas [Claude Code](https://claude.com/claude-code) y Python 3.9 o más nuev
 ### 1. Instala la skill
 
 ```bash
-npx skills add RabbitDesigns22/hora-exacta -g -y
+npx skills@1.8.1 add https://github.com/RabbitDesigns22/hora-exacta/tree/d5a06e7aa17d9e6907bccbafc00c9a64d0ed99b6 -g -y
 ```
 
 Queda en `~/.claude/skills/hora-exacta/`. Con esto Claude ya puede correr el script cuando le preguntes la hora.
